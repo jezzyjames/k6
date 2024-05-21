@@ -31,3 +31,12 @@ services:
       - K6_INFLUXDB_ADDR=http://influxdb:8086
     volumes:
       - ./script:/script
+
+  mysql:
+    image: mariadb:latest
+    container_name: mysql
+    environment:
+      - MARIADB_ROOT_PASSWORD=P@ssw0rd
+      - MARIADB_DATABASE=arise
+    ports:
+      - 3306:3306
