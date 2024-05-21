@@ -1,0 +1,33 @@
+version: "3.9"
+services:
+  influxdb:
+    image: influxdb:latest
+    ports:
+      - 8086:8086
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=root
+      - DOCKER_INFLUXDB_INIT_PASSWORD=P@ssw0rd
+      - DOCKER_INFLUXDB_INIT_ORG=arise
+      - DOCKER_INFLUXDB_INIT_BUCKET=k6
+      - INFLUXDB_HTTP_MAX_BODY_SIZE=0
+    volumes:
+      - ./data:/var/lib/influxdb2
+      - ./config:/etc/influxdb2
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana:/var/lib/grafana
+
+  k6:
+    image: k6:latest
+    environment:
+      - K6_INFLUXDB_ORGANIZATION=arise
+      - K6_INFLUXDB_BUCKET=k6
+      - K6_INFLUXDB_TOKEN=yF5-rAIFtr7yRlYonGovo4jbfCtg5UbIqiPgZV0hw4wBqLJCd1sLqQ1ZuUs83y8qR28yNlrYG1IWpmhXVox6XA==
+      - K6_INFLUXDB_ADDR=http://influxdb:8086
+    volumes:
+      - ./script:/script

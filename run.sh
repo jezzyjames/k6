@@ -1,0 +1,1 @@
+podman-compose run --rm k6 /k6 run /script/script.js -o xk6-influxdb
