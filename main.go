@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/redis/go-redis/v9"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -17,6 +18,10 @@ func main() {
 		log.Fatal(err)
 	}
 
+	rd := redis.NewClient(&redis.Options{
+		Addr: "localhost:6379",
+	})
+
 	app := fiber.New()
 
 	app.Get("/", func(c fiber.Ctx) error {
@@ -24,8 +29,8 @@ func main() {
 	})
 
 	app.Get("/products", func(c fiber.Ctx) error {
-		productRepo := repositories.NewProductRepository(db)
-		products, err := productRepo.FindAll(false)
+		productRepo := repositories.NewProductRepository(db, rd)
+		products, err := productRepo.FindAll(true)
 		if err != nil {
 			return err
 		}
